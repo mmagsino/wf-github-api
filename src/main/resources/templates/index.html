@@ -43,7 +43,7 @@
 			<div class="container" style="background-color:white;">
 				<div class="panel">
 					<div class="panel-standout">
-						<dl class="row" th:each="repository : ${repositories}">
+						<dl class="row detail standout" th:each="repository : ${repositories}">
 							<dt class="col-sm-2" th:text="#{wf.lbl.name}"></dt>
 							<dd class="col-sm-10" th:text="${repository.name}"></dd>
 							<dt class="col-sm-2" th:text="#{wf.lbl.fullname}"></dt>
@@ -53,8 +53,8 @@
 							<dt class="col-sm-2" th:text="#{wf.lbl.url}">
 							</dt>
 							<dd class="col-sm-10" th:text="${repository.url}"></dd>
-							<dt class="col-sm-2 font-weight-bold" style="font-size:10px; color:gray;" th:text="#{wf.lbl.description}"></dt>
-							<dd class="col-sm-10" style="font-size:10px; color:gray;" th:utext="${#strings.abbreviate(repository.description, 200)}">
+							<dt class="col-sm-2 x-detail" th:text="#{wf.lbl.description}"></dt>
+							<dd class="col-sm-10 x-detail" th:utext="${#strings.abbreviate(repository.description, 200)}">
 							</dd>
 						</dl>
 					</div>

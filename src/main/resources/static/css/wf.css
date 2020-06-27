@@ -116,3 +116,35 @@
 	background-color: #fff;
 	border-radius: .3rem;
 }
+
+.panel {
+	margin-bottom: 10px;
+	border: 0;
+}
+
+.standout {
+	border: 1px solid #d5dfed;
+}
+
+.panel-body {
+	padding: 15px;
+}
+
+.important {
+	font-size: small;
+	font-weight:bold;
+	padding-left: 5px;
+}
+.detail {
+	font-size: small;
+	padding-left: 5px;
+}
+.search-content {
+	display: block;
+	text-align: left;
+}
+
+.x-detail {
+	font-size:10px; color:gray;
+}
+

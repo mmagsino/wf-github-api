@@ -1,6 +1,5 @@
 package wf.github.api.controller;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +17,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import wf.github.api.model.Repository;
 import wf.github.api.service.GithubAnalyticsService;
 
 @Controller
@@ -43,6 +41,18 @@ public class GithubAnalyticsController {
 		}
 		model.addAttribute("query", q);
 		return "index";
+	}
+
+	@GetMapping("/repository")
+	public String repository(final Model model, 
+		final HttpServletRequest request,
+		@RequestParam(name = "q", required = true) final String q,
+		@RequestParam(name = "name", required = true) final String name,
+		@RequestParam(name = "owner", required = true) final String owner) {
+		model.addAttribute("q", q);
+		model.addAttribute("name", name);
+		model.addAttribute("owner", owner);
+		return "repository";
 	}
 
 	@GetMapping(path = "suggest", produces = MediaType.APPLICATION_JSON_VALUE)

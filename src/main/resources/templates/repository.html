@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:with="lang=en" th:lang="en"> 
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shring-to-fit=no"/>
+	<!-- include css in the header -->
+	<link rel="stylesheet" type="text/css" media="all" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+		<link rel="stylesheet" type="text/css" media="all" th:href="@{/css/wf.css}"/>
+	<title th:text="#{wf.title}"></title>
+</head>
+<!-- end head fragments -->
+<body>
+	<div class="container">
+		<nav class="navbar navbar-expand-sm bg-dark">
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="nav-link"
+						data-toggle="tooltip"
+						th:text="#{wf.home}"
+						th:title="#{wf.home}"
+						th:href="@{'/'}">
+					</a>
+				</li>
+			</ul>
+		</nav>
+	<!-- begin breadcrumbs -->
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a th:href="@{/(q=${q})}" th:text="${q}"></a>
+				</li>
+				<li class="breadcrumb-item active" aria-current="page" th:text="|${name} (${owner})|"></li>
+			</ol>
+		</nav>
+	<!-- end breadcrumbs -->
+		<div class="container">
+			<div class="row">
+				<h1>Analytics here</h1>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
