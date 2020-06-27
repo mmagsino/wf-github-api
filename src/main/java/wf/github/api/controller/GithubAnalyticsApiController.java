@@ -2,6 +2,7 @@ package wf.github.api.controller;
 
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +14,7 @@ import wf.github.api.model.Commit;
 import wf.github.api.model.Repository;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping(path = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GithubAnalyticsApiController {
 
 	@GetMapping("/search")
