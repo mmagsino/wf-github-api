@@ -16,6 +16,11 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<jquery.version>3.4.1</jquery.version>
+		<bootstap.version>4.3.1</bootstap.version>
+		<bootstrap-glyphicons.version>bdd2cbfba0</bootstrap-glyphicons.version>
+		<jquery-ui.version>1.12.1</jquery-ui.version>
+		<treeview.version>1.2.0</treeview.version>
 	</properties>
 
 	<dependencies>
@@ -38,6 +43,41 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>29.0-jre</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery</artifactId>
+			<version>${jquery.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap</artifactId>
+			<version>${bootstap.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap-glyphicons</artifactId>
+			<version>${bootstrap-glyphicons.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery-ui</artifactId>
+			<version>${jquery-ui.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap-treeview</artifactId>
+			<version>${treeview.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>webjars-locator</artifactId>
+			<version>0.40</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
