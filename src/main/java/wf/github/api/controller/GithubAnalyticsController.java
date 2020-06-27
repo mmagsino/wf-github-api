@@ -3,34 +3,55 @@ package wf.github.api.controller;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import lombok.extern.slf4j.Slf4j;
+import wf.github.api.model.Repository;
+import wf.github.api.service.GithubAnalyticsService;
 
-@Slf4j
 @Controller
 @RequestMapping("/")
 public class GithubAnalyticsController {
+	private final GithubAnalyticsService service;
+
+	@Autowired
+	public GithubAnalyticsController(final GithubAnalyticsService service) {
+		this.service = service;
+	}
 
 	@GetMapping
-	public String index() {
+	public String index(final Model model, 
+		final HttpServletRequest request,
+		@RequestParam(name = "q", required = false, defaultValue = "") final String q) 
+	{
+		if (Strings.isNullOrEmpty(q)) {
+			model.addAttribute("repositories", Lists.newArrayList());
+		} else {
+			model.addAttribute("repositories", service.searchRepositories(q));
+		}
+		model.addAttribute("query", q);
 		return "index";
 	}
 
 	@GetMapping(path = "suggest", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Set<String>> suggestion(@RequestParam(name = "q", required = true, defaultValue = "") final String q) {
-		log.info("Suggestion: ", q);
-		if (!Strings.isNullOrEmpty(q)) {
-			
+		if (Strings.isNullOrEmpty(q)) {
+			return ResponseEntity.ok(Sets.newHashSet());
+		} else {
+			return ResponseEntity.ok(service.suggests(q));
 		}
-		return ResponseEntity.ok(Sets.newHashSet());
+		
 	}
 }

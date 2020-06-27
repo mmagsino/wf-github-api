@@ -1,7 +1,5 @@
 package wf.github.api;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -42,6 +40,8 @@ class WfGithubApiApplicationTests {
 			JsonNode childNode = nodes.next();
 			JsonNode name = childNode.path("name");
 			JsonNode fullName = childNode.path("full_name");
+			JsonNode htmlUrl = childNode.path("html_url");
+			JsonNode desc = childNode.path("description");
 			JsonNode owner = childNode.path("owner").path("login");
 			System.out.println(">> ["+owner.asText()+"] <<"); 
 			System.out.println(name.asText() + " = " + fullName.asText());
