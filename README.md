@@ -16,6 +16,7 @@
 
 - Run a maven command `mvn clean spring-boot:run`
 - Open browser and type `http:localhost:8080`
+- Rest API documentation `http://localhost:8080/swagger-ui.html`
 
 ## Run as a jar file.
 
@@ -23,6 +24,7 @@
 - Build the package by skipping the integration test `mvn clean package -Dmaven.test.skip=true`.
 - Run on console `java -jar target/wf-github-api-0.0.1-SNAPSHOT.jar`.
 - Open browser and type `http:localhost:8080`
+- Rest API documentation `http://localhost:8080/swagger-ui.html`
 
 ## Features
 
