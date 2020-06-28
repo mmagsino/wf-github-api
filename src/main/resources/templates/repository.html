@@ -6,7 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shring-to-fit=no"/>
 	<!-- include css in the header -->
 	<link rel="stylesheet" type="text/css" media="all" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
-		<link rel="stylesheet" type="text/css" media="all" th:href="@{/css/wf.css}"/>
+	<link rel="stylesheet" type="text/css" media="all" th:href="@{/css/wf.css}"/>
+	<link rel="stylesheet" type="text/css" media="all" href=" https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"/>
 	<title th:text="#{wf.title}"></title>
 </head>
 <!-- end head fragments -->
@@ -35,41 +36,58 @@
 		</nav>
 	<!-- end breadcrumbs -->
 		<div class="container">
-			<div class="row">
-				<table class="table table-striped table-bordered">
-					<thead>
-						<tr>
-							<th th:text="#{wf.lbl.commiter}">
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="contrib : ${contribs}">
-							<td th:text="${contrib}"></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div class="row" id="activitiesChart" style="height: 370px; width: 100%;"></div>
+			<table id="contributors" class="table table-striped table-bordered">
+				<thead>
+					<tr>
+						<th th:text="#{wf.lbl.commiter}">
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="contrib : ${contribs}">
+						<td th:text="${contrib}"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="row x-chart" id="activitiesChart"></div>
+			<p></p>
+			<div class="row x-chart" id="projectionChart"></div>
 		</div>
 	</div>
 <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+
 <script th:inline="javascript">
+/*<![CDATA[*/
 	(function() {
-	/*<![CDATA[*/
-		var activities = [[${committersActivity}]];
-	/*]]>*/
-		var chart = new CanvasJS.Chart("activitiesChart", {
-			title: {text: 'Github Activities'},
+		 $('#contributors').DataTable({
+			 "pageLength": 5
+		 });
+
+		var activities = new CanvasJS.Chart('activitiesChart', {
+			title: {text: 'Github activities'},
 			data: [{
-				type: "column",
-				dataPoints: activities
+				type: 'column',
+				dataPoints: [[${committersActivity}]]
 			}]
 		});
-		chart.render();
+		activities.render();
+
+		var timestamps = new CanvasJS.Chart('projectionChart', {
+			title: {text: 'Commit activities projection'},
+			zoomEnabled: true,
+			data: [{
+				type: 'area',
+				xValueType: "dateTime",
+				dataPoints: [[${timestamps}]]
+			}]
+		});
+		timestamps.render();
 	})();
+/*]]>*/
 </script>
 </body>
 </html>

@@ -1,8 +1,10 @@
 package wf.github.api;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
@@ -114,7 +116,10 @@ class WfGithubApiApplicationTests {
 			final JsonNode committer = node.path("author").path("login");
 			final JsonNode date = node.path("commit").path("committer").path("date");
 			final Commit commit = new Commit();
-			commit.setDate(LocalDateTime.parse(date.asText(),DateTimeFormatter.ISO_DATE_TIME));
+			commit.setDate(new Date(LocalDateTime
+					.parse(date.asText(), DateTimeFormatter.ISO_DATE_TIME)
+					.atZone(ZoneId.systemDefault())
+					.toEpochSecond() * 1000));
 			commit.setSha(sha.asText());
 			groupByCommitters.put(committer.asText(), commit);
 		}

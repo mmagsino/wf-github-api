@@ -1,6 +1,9 @@
 package wf.github.api.controller;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,12 +19,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
+import com.google.common.collect.TreeMultimap;
 
+import wf.github.api.model.Commit;
 import wf.github.api.model.DataPoint;
 import wf.github.api.model.OwnerRepo;
 import wf.github.api.model.Projection;
+import wf.github.api.model.TimeStampDatapoint;
 import wf.github.api.service.GithubAnalyticsService;
 
 @Controller
@@ -71,6 +79,22 @@ public class GithubAnalyticsController {
 			})
 			.collect(Collectors.toList());
 		model.addAttribute("committersActivity", dataPoints);
+		Map<String, Collection<Commit>> commits = projection.getTimelineCommits();
+		
+		List<TimeStampDatapoint> timestamps = Lists.newLinkedList();
+		Multimap<Date, String> freqs = TreeMultimap.create();
+		Set<Map.Entry<String, Collection<Commit>>> entries = commits.entrySet();
+		for (Map.Entry<String, Collection<Commit>> entry : entries) {
+			entry.getValue()
+				.forEach(c -> freqs.put(c.getDate(), c.getSha()));
+		}
+		freqs.asMap().forEach((k, v) -> {
+			TimeStampDatapoint tsd = new TimeStampDatapoint();
+			tsd.setX(k.getTime());
+			tsd.setY(v.size());
+			timestamps.add(tsd);
+		});
+		model.addAttribute("timestamps", timestamps);
 		return "repository";
 	}
 
