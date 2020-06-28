@@ -1,5 +1,10 @@
 package wf.github.api.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -10,11 +15,17 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
 import lombok.extern.slf4j.Slf4j;
 import wf.github.api.UrlConfig;
+import wf.github.api.model.Commit;
+import wf.github.api.model.Committer;
+import wf.github.api.model.OwnerRepo;
+import wf.github.api.model.Projection;
 import wf.github.api.model.Repository;
 
 @Service
@@ -77,4 +88,73 @@ public class GithubAnalyticsServiceImpl implements GithubAnalyticsService {
 		return repositories;
 	}
 
+	@Override
+	public Set<String> contributors(OwnerRepo ownerRepo) {
+		Set<String> contributors = Sets.newTreeSet();
+		String content = restTemplate.getForObject(String.format("%srepos/%s/%s/contributors", 
+			config.getGithubApi(),
+			ownerRepo.getOwner(),
+			ownerRepo.getRepoName()), String.class);
+		try {
+			final JsonNode rootNode = mapper.readTree(content);
+			final Iterator<JsonNode> commiters = rootNode.iterator();
+			while (commiters.hasNext()) {
+				JsonNode commiter = commiters.next();
+				contributors.add(commiter.path("login").asText());
+			}
+		} catch (final Exception e) {
+			log.error("An error occured while fetching commiters. {}", e);
+		}
+		return contributors;
+	}
+
+	@Override
+	public Projection latestProjection(OwnerRepo ownerRepo) {
+		Multimap<String, Commit> groupings = groupByCommitters(ownerRepo);
+		if (groupings.isEmpty()) {
+			return Projection.empty();
+		} else {
+			List<Committer> commiters = Lists.newArrayList();
+			groupings.keySet().forEach(key -> {
+				Collection<Commit> commits = groupings.get(key);
+				Committer committer = new Committer();
+				committer.setName(key);
+				committer.setNumOfCommits(commits.size());
+				commiters.add(committer);
+			});
+			Collections.sort(commiters, Comparator
+				.comparing(Committer::getNumOfCommits)
+				.reversed());
+			Projection projection = new Projection();
+			projection.setContributorCommits(commiters);
+			projection.setTimelineCommits(groupings.asMap());
+			return projection;
+		}
+	}
+
+	private Multimap<String, Commit> groupByCommitters(OwnerRepo ownerRepo) {
+		Multimap<String, Commit> groupings = ArrayListMultimap.create();
+		String content = restTemplate.getForObject(String.format("%srepos/%s/%s/commits?per_page=%d", 
+			config.getGithubApi(),
+			ownerRepo.getOwner(),
+			ownerRepo.getRepoName(),
+			config.getNumOfCommits()), String.class);
+		try {
+			JsonNode rootNode = mapper.readTree(content);
+			Iterator<JsonNode> commits = rootNode.iterator();
+			while (commits.hasNext()) {
+				JsonNode node = commits.next();
+				JsonNode sha = node.path("sha");
+				JsonNode committer = node.path("author").path("login");
+				JsonNode date = node.path("commit").path("committer").path("date");
+				Commit commit = new Commit();
+				commit.setDate(LocalDateTime.parse(date.asText(),DateTimeFormatter.ISO_DATE_TIME));
+				commit.setSha(sha.asText());
+				groupings.put(committer.asText(), commit);
+			}
+		} catch (final Exception e) {
+			log.error("An error occured while building projection. {}", e);
+		}
+		return groupings;
+	}
 }

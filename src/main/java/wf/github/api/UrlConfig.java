@@ -14,6 +14,9 @@ public class UrlConfig {
 	@Value("${wf.github.api.search-repo}")
 	private String searchRepoEndpoint;
 
+	@Value("${wf.github.api.num.commits}")
+	private Integer numOfCommits;
+
 	public String githubApiRepoEndpoint() {
 		return String.format("%s%s", githubApi, searchRepoEndpoint);
 	}

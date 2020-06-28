@@ -101,7 +101,7 @@ class WfGithubApiApplicationTests {
 	}
 	
 	private Multimap<String, Commit> groupBy(String owner, String repo) throws JsonMappingException, JsonProcessingException {
-		final String endpoint = "https://api.github.com/repos/%s/%s/commits";
+		final String endpoint = "https://api.github.com/repos/%s/%s/commits?per_page=100";
 		final RestTemplate restTemplate = new RestTemplate();
 		final String content = restTemplate.getForObject(String.format(endpoint, owner, repo), String.class);
 		final Multimap<String, Commit> groupByCommitters = ArrayListMultimap.create();
