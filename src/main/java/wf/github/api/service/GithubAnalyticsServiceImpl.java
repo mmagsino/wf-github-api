@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import wf.github.api.UrlConfig;
 import wf.github.api.model.Commit;
 import wf.github.api.model.Committer;
+import wf.github.api.model.Contributor;
 import wf.github.api.model.OwnerRepo;
 import wf.github.api.model.Projection;
 import wf.github.api.model.Repository;
@@ -91,18 +92,21 @@ public class GithubAnalyticsServiceImpl implements GithubAnalyticsService {
 	}
 
 	@Override
-	public Set<String> contributors(OwnerRepo ownerRepo) {
-		Set<String> contributors = Sets.newTreeSet();
+	public List<Contributor> contributors(OwnerRepo ownerRepo) {
+		List<Contributor> contributors = Lists.newArrayList();
 		String content = restTemplate.getForObject(String.format("%srepos/%s/%s/contributors", 
 			config.getGithubApi(),
 			ownerRepo.getOwner(),
 			ownerRepo.getRepoName()), String.class);
 		try {
-			final JsonNode rootNode = mapper.readTree(content);
-			final Iterator<JsonNode> commiters = rootNode.iterator();
+			JsonNode rootNode = mapper.readTree(content);
+			Iterator<JsonNode> commiters = rootNode.iterator();
 			while (commiters.hasNext()) {
 				JsonNode commiter = commiters.next();
-				contributors.add(commiter.path("login").asText());
+				Contributor contrib = new Contributor();
+				contrib.setName(commiter.path("login").asText());
+				contrib.setUrl(commiter.path("html_url").asText());
+				contributors.add(contrib);
 			}
 		} catch (final Exception e) {
 			log.error("An error occured while fetching commiters. {}", e);

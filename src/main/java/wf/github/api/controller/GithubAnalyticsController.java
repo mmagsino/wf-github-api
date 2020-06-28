@@ -25,7 +25,6 @@ import com.google.common.collect.Sets;
 import com.google.common.collect.TreeMultimap;
 
 import wf.github.api.model.Commit;
-import wf.github.api.model.Committer;
 import wf.github.api.model.DataPoint;
 import wf.github.api.model.OwnerRepo;
 import wf.github.api.model.Projection;

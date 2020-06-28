@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
 
+import wf.github.api.model.Contributor;
 import wf.github.api.model.OwnerRepo;
 import wf.github.api.model.Projection;
 import wf.github.api.model.Repository;
@@ -36,7 +37,7 @@ public class GithubAnalyticsApiController {
 	}
 
 	@GetMapping("/committers/{owner}/{repoName}")
-	public ResponseEntity<Set<String>> fetchContributors(
+	public ResponseEntity<List<Contributor>> fetchContributors(
 		@PathVariable(name = "owner", required = true) String owner,
 		@PathVariable(name = "repoName", required = true) String repoName) {
 		OwnerRepo ownerRepo = new OwnerRepo();

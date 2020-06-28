@@ -39,13 +39,16 @@
 			<table id="contributors" class="table table-striped table-bordered">
 				<thead>
 					<tr>
-						<th th:text="#{wf.lbl.commiter}">
-						</th>
+						<th th:text="#{wf.lbl.commiter}"></th>
+						<th th:text="#{wf.lbl.url}"></th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr th:each="contrib : ${contribs}">
-						<td th:text="${contrib}"></td>
+						<td th:text="${contrib.name}"></td>
+						<td>
+							<a th:href="@{contrib.url}" th:text="${contrib.url}"></a>
+						</td>
 					</tr>
 				</tbody>
 			</table>
