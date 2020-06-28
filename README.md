@@ -1,6 +1,6 @@
 # WF Exam
 
-> A Spring based web application that searches github public projects and does basic analytics activity based on the contributors 100 commits.
+> A Spring based web application that searches github public projects and does basic analytics based on the activity of the contributors commits.
 
 ## Requirements.
 
@@ -20,7 +20,7 @@
 ## Run as a jar file.
 
 - Build the package `mvn clean package`.
-- Build the package by skipping the integration test. ``
+- Build the package by skipping the integration test `mvn clean package -Dmaven.test.skip=true`.
 - Run on console `java -jar target/wf-github-api-0.0.1-SNAPSHOT.jar`.
 - Open browser and type `http:localhost:8080`
 
@@ -37,6 +37,6 @@
 
 <ul>
     <li>
-       Contact: <sup>michael03.25magsino@gmail.com, mike2_magsino@yahoo.com</sup>
+       Contact: <sup>[michael03.25magsino@gmail.com, mike2_magsino@yahoo.com]</sup>
     </li>
 </ul>
