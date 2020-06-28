@@ -26,12 +26,12 @@
 
 ## Features
 
-[x] Search a public project from Github and return results.
-[x] Auto complete search feature.
-[x] Bookmarkable result pages.
-[x] Exposed Rest API and [documentation](http://localhost:8080/swagger-ui.html).
-[x] List of contributors for a given project.
-[x] Basic analytics 
+- [x] Search a public project from Github and return results.
+- [x] Auto complete search feature.
+- [x] Bookmarkable result pages.
+- [x] Exposed Rest API and [documentation](http://localhost:8080/swagger-ui.html).
+- [x] List of contributors for a given project.
+- [x] Basic analytics 
    - Impact of each user on a given project.
    - Projection of commits on a timeline.
 
