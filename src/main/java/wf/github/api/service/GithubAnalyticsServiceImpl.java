@@ -36,6 +36,7 @@ import wf.github.api.model.Repository;
 public class GithubAnalyticsServiceImpl implements GithubAnalyticsService {
 	private static final String REPO_QUERY_FMT = "%s?q=%s&sort=stars&order=desc";
 	private static final int MILLISECOND = 1000;
+
 	private final ObjectMapper mapper;
 	private final UrlConfig config;
 	private final RestTemplate restTemplate;
@@ -87,7 +88,6 @@ public class GithubAnalyticsServiceImpl implements GithubAnalyticsService {
 		} catch (final Exception e) {
 			log.error("Error while searching repo. {}", e);
 		}
-		log.info("{}", repositories);
 		return repositories;
 	}
 
