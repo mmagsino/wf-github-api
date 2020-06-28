@@ -1,10 +1,13 @@
 package wf.github.api.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalField;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -32,7 +35,7 @@ import wf.github.api.model.Repository;
 @Slf4j
 public class GithubAnalyticsServiceImpl implements GithubAnalyticsService {
 	private static final String REPO_QUERY_FMT = "%s?q=%s&sort=stars&order=desc";
-
+	private static final int MILLISECOND = 1000;
 	private final ObjectMapper mapper;
 	private final UrlConfig config;
 	private final RestTemplate restTemplate;
@@ -148,7 +151,10 @@ public class GithubAnalyticsServiceImpl implements GithubAnalyticsService {
 				JsonNode committer = node.path("author").path("login");
 				JsonNode date = node.path("commit").path("committer").path("date");
 				Commit commit = new Commit();
-				commit.setDate(LocalDateTime.parse(date.asText(),DateTimeFormatter.ISO_DATE_TIME));
+				commit.setDate(new Date(LocalDateTime
+					.parse(date.asText(), DateTimeFormatter.ISO_DATE_TIME)
+					.atZone(ZoneId.systemDefault())
+					.toEpochSecond() * MILLISECOND));
 				commit.setSha(sha.asText());
 				groupings.put(committer.asText(), commit);
 			}

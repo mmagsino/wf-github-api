@@ -30,15 +30,46 @@
 				<li class="breadcrumb-item">
 					<a th:href="@{/(q=${q})}" th:text="${q}"></a>
 				</li>
-				<li class="breadcrumb-item active" aria-current="page" th:text="|${name} (${owner})|"></li>
+				<li class="breadcrumb-item active" aria-current="page" th:text="|${ownerRepo.repoName} (${ownerRepo.owner})|"></li>
 			</ol>
 		</nav>
 	<!-- end breadcrumbs -->
 		<div class="container">
 			<div class="row">
-				<h1>Analytics here</h1>
+				<table class="table table-striped table-bordered">
+					<thead>
+						<tr>
+							<th th:text="#{wf.lbl.commiter}">
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="contrib : ${contribs}">
+							<td th:text="${contrib}"></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
+			<div class="row" id="activitiesChart" style="height: 370px; width: 100%;"></div>
 		</div>
 	</div>
+<script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script th:inline="javascript">
+	(function() {
+	/*<![CDATA[*/
+		var activities = [[${committersActivity}]];
+	/*]]>*/
+		var chart = new CanvasJS.Chart("activitiesChart", {
+			title: {text: 'Github Activities'},
+			data: [{
+				type: "column",
+				dataPoints: activities
+			}]
+		});
+		chart.render();
+	})();
+</script>
 </body>
 </html>

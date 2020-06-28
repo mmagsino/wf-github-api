@@ -1,6 +1,8 @@
 package wf.github.api.controller;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,6 +19,9 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import wf.github.api.model.DataPoint;
+import wf.github.api.model.OwnerRepo;
+import wf.github.api.model.Projection;
 import wf.github.api.service.GithubAnalyticsService;
 
 @Controller
@@ -49,9 +54,23 @@ public class GithubAnalyticsController {
 		@RequestParam(name = "q", required = true) final String q,
 		@RequestParam(name = "name", required = true) final String name,
 		@RequestParam(name = "owner", required = true) final String owner) {
+		OwnerRepo ownerRepo = new OwnerRepo();
+		ownerRepo.setOwner(owner);
+		ownerRepo.setRepoName(name);
 		model.addAttribute("q", q);
-		model.addAttribute("name", name);
-		model.addAttribute("owner", owner);
+		model.addAttribute("ownerRepo", ownerRepo);
+		model.addAttribute("contribs", service.contributors(ownerRepo));
+		Projection projection = service.latestProjection(ownerRepo);
+		List<DataPoint> dataPoints = projection.getContributorCommits()
+			.stream()
+			.map(contrib -> {
+				DataPoint dp = new DataPoint();
+				dp.setLabel(contrib.getName());
+				dp.setY(contrib.getNumOfCommits());
+				return dp;
+			})
+			.collect(Collectors.toList());
+		model.addAttribute("committersActivity", dataPoints);
 		return "repository";
 	}
 
@@ -62,6 +81,5 @@ public class GithubAnalyticsController {
 		} else {
 			return ResponseEntity.ok(service.suggests(q));
 		}
-		
 	}
 }

@@ -71,7 +71,7 @@
 <script type="text/javascript" th:src="@{/webjars/jquery-ui/jquery-ui.js}"></script>
 <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <script type="text/javascript">
-$(function() {
+(function() {
 	$("#search-input").autocomplete({
 		source: function( request, response ) {
 			$.ajax( {
@@ -87,7 +87,7 @@ $(function() {
 		},
 		minLength: 4
 	});
-});
+})();
 </script>
 </body>
 </html>
