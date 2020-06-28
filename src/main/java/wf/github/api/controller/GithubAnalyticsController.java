@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.TreeMultimap;
 
 import wf.github.api.model.Commit;
+import wf.github.api.model.Committer;
 import wf.github.api.model.DataPoint;
 import wf.github.api.model.OwnerRepo;
 import wf.github.api.model.Projection;
@@ -80,7 +80,20 @@ public class GithubAnalyticsController {
 			.collect(Collectors.toList());
 		model.addAttribute("committersActivity", dataPoints);
 		Map<String, Collection<Commit>> commits = projection.getTimelineCommits();
-		
+		model.addAttribute("timestamps", projectionsDatapoint(commits));
+		return "repository";
+	}
+
+	@GetMapping(path = "suggest", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Set<String>> suggestion(@RequestParam(name = "q", required = true, defaultValue = "") final String q) {
+		if (Strings.isNullOrEmpty(q)) {
+			return ResponseEntity.ok(Sets.newHashSet());
+		} else {
+			return ResponseEntity.ok(service.suggests(q));
+		}
+	}
+
+	private List<TimeStampDatapoint> projectionsDatapoint(Map<String, Collection<Commit>> commits) {
 		List<TimeStampDatapoint> timestamps = Lists.newLinkedList();
 		Multimap<Date, String> freqs = TreeMultimap.create();
 		Set<Map.Entry<String, Collection<Commit>>> entries = commits.entrySet();
@@ -94,16 +107,6 @@ public class GithubAnalyticsController {
 			tsd.setY(v.size());
 			timestamps.add(tsd);
 		});
-		model.addAttribute("timestamps", timestamps);
-		return "repository";
-	}
-
-	@GetMapping(path = "suggest", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Set<String>> suggestion(@RequestParam(name = "q", required = true, defaultValue = "") final String q) {
-		if (Strings.isNullOrEmpty(q)) {
-			return ResponseEntity.ok(Sets.newHashSet());
-		} else {
-			return ResponseEntity.ok(service.suggests(q));
-		}
+		return timestamps;
 	}
 }
